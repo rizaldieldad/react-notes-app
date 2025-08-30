@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import { v4 as uuidv4 } from 'uuid'
-import { FaTrash } from 'react-icons/fa'
+import { FaTrash, FaHamburger } from 'react-icons/fa'
 
 function App () {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [notes, setNotes] = useState(() => {
     const storedNotes = localStorage.getItem('notes')
     let sortedNotes
@@ -46,6 +47,7 @@ function App () {
 
     setCurrentNote(newNote.id)
     setNotes([newNote, ...notes])
+    setIsSidebarOpen(false)
   }
 
   const getCurrentNote = () => {
@@ -66,18 +68,35 @@ function App () {
 
   return (
     <main className='flex min-h-screen'>
-      <div className='w-64 p-8 space-y-5'>
+      {/* sidebar */}
+      <div
+        className={`fixed inset-y-0 left-0 transform bg-white w-64 p-8 space-y-5 transition-transform duration-300 md:relative md:translate-x-0 ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        {/* Close button (mobile only) */}
+        <div className='md:hidden flex justify-end'>
+          <button
+            onClick={() => setIsSidebarOpen(false)}
+            className='p-2 rounded-full bg-transparent border-1 border-black'
+          >
+            X
+          </button>
+        </div>
         <h1 onClick={() => setCurrentNote(null)} className='text-2xl font-bold'>
           Not Notion
         </h1>
         <p className='text-sm'>You have {notes.length} notes</p>
-        <ul className='flex flex-col space-y-5'>
+        <ul className='sidebar flex flex-col space-y-5 overflow-y-auto max-h-[80vh] pr-2'>
           {notes.length === 0 && (
             <p className='text-zinc-800'>You have no notes</p>
           )}
           {notes.map(note => (
             <li
-              onClick={() => setCurrentNote(note.id)}
+              onClick={() => {
+                setCurrentNote(note.id)
+                setIsSidebarOpen(false) // auto close on mobile
+              }}
               key={note.id}
               className={`cursor-pointer border-1 border-sky-500 hover:bg-sky-500 hover:text-white p-2 rounded ${
                 currentNote === note.id ? 'bg-sky-500 text-white' : ''
@@ -88,9 +107,19 @@ function App () {
           ))}
         </ul>
       </div>
-      <div className='flex flex-grow justify-center items-center bg-sky-700 p-8'>
+
+      {/* editor */}
+      <div className='flex flex-grow flex-col bg-sky-700 p-8'>
+        <div className='md:hidden flex justify-between items-center mb-4'>
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className='p-2 bg-sky-500 text-white rounded'
+          >
+            <FaHamburger size={16} />
+          </button>
+        </div>
         {currentNote && (
-          <div className='flex flex-col w-full h-full bg-gray-100 '>
+          <div className='flex flex-col w-full h-full bg-gray-100'>
             <div className='flex justify-between items-center p-6'>
               <input
                 className='text-3xl font-bold focus:outline-none'
@@ -114,7 +143,7 @@ function App () {
 
               <button
                 onClick={handleDeleteNote}
-                className='bg-red-800 hover:bg-red-900 text-white font-bold p-2 rounded'
+                className='bg-red-800 hover:bg-red-900 text-white font-bold p-2 rounded hover:cursor-pointer'
               >
                 <FaTrash size={16} />
               </button>
@@ -149,7 +178,7 @@ function App () {
         )}
 
         {!currentNote && (
-          <div className='flex flex-col space-y-10'>
+          <div className='flex flex-col w-full h-full justify-center items-center space-y-10'>
             <div className='text-center text-white '>
               <h1 className='text-3xl font-bold'>Main Content</h1>
               <p>This is the main content of the page.</p>
