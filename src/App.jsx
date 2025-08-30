@@ -190,8 +190,8 @@ function App () {
           </div>
         ) : (
           /* Empty State */
-          <div className='flex flex-col flex-grow justify-center items-center space-y-10 text-center text-white'>
-            <div>
+          <div className='flex flex-col flex-grow justify-center items-center space-y-10'>
+            <div className='flex flex-col items-center text-center text-white'>
               <h1 className='text-2xl md:text-3xl font-bold'>
                 Welcome to Not Notion !
               </h1>
@@ -207,7 +207,7 @@ function App () {
             </div>
 
             {recentNotes.length > 0 && (
-              <div className='flex flex-col w-full max-w-sm'>
+              <div className='flex flex-col w-full max-w-sm text-white text-center'>
                 <h2 className='text-lg md:text-xl font-semibold mb-3'>
                   Recent Notes
                 </h2>
@@ -224,6 +224,9 @@ function App () {
                 </div>
               </div>
             )}
+            <footer className='absolute bottom-0 text-center py-4 text-white'>
+              &copy; 2025 Not Notion App by Eldad R. All rights reserved.
+            </footer>
           </div>
         )}
       </div>
