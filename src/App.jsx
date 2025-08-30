@@ -109,20 +109,24 @@ function App () {
       </div>
 
       {/* editor */}
-      <div className='flex flex-grow flex-col bg-sky-700 p-8'>
+      <div className='flex flex-col w-full min-h-screen bg-sky-700 p-4 md:p-8'>
+        {/* Mobile top bar with hamburger */}
         <div className='md:hidden flex justify-between items-center mb-4'>
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             className='p-2 bg-sky-500 text-white rounded'
           >
-            <FaHamburger size={16} />
+            <FaHamburger size={18} />
           </button>
         </div>
-        {currentNote && (
-          <div className='flex flex-col w-full h-full bg-gray-100'>
-            <div className='flex justify-between items-center p-6'>
+
+        {/* Note Editor */}
+        {currentNote ? (
+          <div className='flex flex-col flex-grow bg-gray-100 rounded-md shadow-sm'>
+            {/* Header */}
+            <div className='flex justify-between items-center p-3 md:p-6 border-b border-gray-200'>
               <input
-                className='text-3xl font-bold focus:outline-none'
+                className='w-full text-2xl md:text-3xl font-bold focus:outline-none bg-transparent'
                 placeholder='Untitled'
                 value={currentNoteObject.title}
                 onChange={e => {
@@ -143,14 +147,15 @@ function App () {
 
               <button
                 onClick={handleDeleteNote}
-                className='bg-red-800 hover:bg-red-900 text-white font-bold p-2 rounded hover:cursor-pointer'
+                className='ml-4 bg-red-700 hover:bg-red-800 text-white font-bold p-2 rounded'
               >
                 <FaTrash size={16} />
               </button>
             </div>
 
+            {/* Textarea */}
             <textarea
-              className='h-full flex-grow p-6 text-lg bg-gray-100 focus:outline-none mb-4 resize-none overflow-hidden'
+              className='flex-grow w-full p-4 md:p-6 text-base md:text-lg bg-gray-100 focus:outline-none resize-none overflow-hidden'
               placeholder='Start writing your note...'
               value={currentNoteObject.content}
               onChange={e => {
@@ -166,37 +171,40 @@ function App () {
                   )
                 )
 
+                // Auto resize
                 e.target.style.height = 'auto'
                 e.target.style.height = `${e.target.scrollHeight}px`
               }}
             />
 
-            <p className='text-slate-600 p-3'>
+            {/* Footer */}
+            <p className='text-slate-600 p-3 text-sm md:text-base'>
               Characters count: {currentNoteObject.content.length}
             </p>
           </div>
-        )}
-
-        {!currentNote && (
-          <div className='flex flex-col w-full h-full justify-center items-center space-y-10'>
-            <div className='text-center text-white '>
-              <h1 className='text-3xl font-bold'>Main Content</h1>
-              <p>This is the main content of the page.</p>
+        ) : (
+          /* Empty State */
+          <div className='flex flex-col flex-grow justify-center items-center space-y-10 text-center text-white'>
+            <div>
+              <h1 className='text-2xl md:text-3xl font-bold'>Main Content</h1>
+              <p className='mt-2'>This is the main content of the page.</p>
               <button
                 onClick={handleNewNote}
-                className='mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+                className='mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
               >
                 New Note
               </button>
             </div>
 
-            <div className='flex flex-col text-center text-white'>
-              <h2 className='text-xl font-semibold mb-3'>Recent Notes</h2>
-              <div className='flex flex-col gap-4'>
+            <div className='flex flex-col w-full max-w-sm'>
+              <h2 className='text-lg md:text-xl font-semibold mb-3'>
+                Recent Notes
+              </h2>
+              <div className='flex flex-col gap-3'>
                 {recentNotes.map(note => (
                   <div
                     key={note.id}
-                    className='border-2 border-sky-500 hover:bg-sky-500 hover:text-white p-2 rounded'
+                    className='border-2 border-sky-500 hover:bg-sky-500 hover:text-white p-2 rounded cursor-pointer'
                     onClick={() => setCurrentNote(note.id)}
                   >
                     {note.title || 'Untitled'}
