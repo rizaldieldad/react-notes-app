@@ -178,16 +178,26 @@ function App () {
             />
 
             {/* Footer */}
-            <p className='text-slate-600 p-3 text-sm md:text-base'>
-              Characters count: {currentNoteObject.content.length}
-            </p>
+            <div className='flex justify-between items-center p-3'>
+              <p className='text-slate-600 text-sm md:text-base'>
+                Characters count: {currentNoteObject.content.length}
+              </p>
+
+              <span className='text-slate-600 text-sm md:text-base'>
+                Last modified: {currentNoteObject.lastModified.split('T')[0]}
+              </span>
+            </div>
           </div>
         ) : (
           /* Empty State */
           <div className='flex flex-col flex-grow justify-center items-center space-y-10 text-center text-white'>
             <div>
-              <h1 className='text-2xl md:text-3xl font-bold'>Main Content</h1>
-              <p className='mt-2'>This is the main content of the page.</p>
+              <h1 className='text-2xl md:text-3xl font-bold'>
+                Welcome to Not Notion !
+              </h1>
+              <p className='mt-2'>
+                On this app you can create and manage notes.
+              </p>
               <button
                 onClick={handleNewNote}
                 className='mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
@@ -196,22 +206,24 @@ function App () {
               </button>
             </div>
 
-            <div className='flex flex-col w-full max-w-sm'>
-              <h2 className='text-lg md:text-xl font-semibold mb-3'>
-                Recent Notes
-              </h2>
-              <div className='flex flex-col gap-3'>
-                {recentNotes.map(note => (
-                  <div
-                    key={note.id}
-                    className='border-2 border-sky-500 hover:bg-sky-500 hover:text-white p-2 rounded cursor-pointer'
-                    onClick={() => setCurrentNote(note.id)}
-                  >
-                    {note.title || 'Untitled'}
-                  </div>
-                ))}
+            {recentNotes.length > 0 && (
+              <div className='flex flex-col w-full max-w-sm'>
+                <h2 className='text-lg md:text-xl font-semibold mb-3'>
+                  Recent Notes
+                </h2>
+                <div className='flex flex-col gap-3'>
+                  {recentNotes.map(note => (
+                    <div
+                      key={note.id}
+                      className='border-2 border-sky-500 hover:bg-sky-500 hover:text-white p-2 rounded cursor-pointer'
+                      onClick={() => setCurrentNote(note.id)}
+                    >
+                      {note.title || 'Untitled'}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
       </div>
